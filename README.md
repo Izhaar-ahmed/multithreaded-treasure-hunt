@@ -14,12 +14,14 @@
 ## ✨ Features
 
 - **Real-time Multiplayer** — Multiple players connect and compete simultaneously
-- **Multi-threaded Server** — Each client is handled on a dedicated thread for true concurrency
+- **Multi-threaded Server** — Each client is handled on a dedicated thread for concurrent I/O handling
 - **TCP + UDP Networking** — Reliable messaging over TCP, fast state broadcasts via UDP multicast
 - **Browser-based UI** — Beautiful cyberpunk-themed web interface with canvas rendering
 - **CLI Client** — Lightweight terminal client for direct play
 - **Live Distance Clues** — Server calculates and sends proximity hints after every move
 - **Pac-Man Wrapping** — Players wrap around the grid edges for continuous exploration
+
+> **Note:** This project focuses on I/O-bound concurrency using Python's `threading` module. For CPU-bound scaling, a `multiprocessing`-based or lower-level implementation would be required.
 
 <br />
 
@@ -108,7 +110,7 @@ The system consists of **three main components** that work together:
 | **Web Gateway** | Bridges browser clients to the game server via Socket.IO |
 | **Browser Client** | Renders the game canvas and handles user input |
 
-The **Game Server** communicates with clients over TCP (reliable commands) and UDP multicast (fast position broadcasts). The **Web Gateway** acts as a translator — it receives Socket.IO events from the browserrontend and forwards them as TCP messages to the game server, while also listening on the UDP multicast group to push real-time updates back to the browser.
+The **Game Server** communicates with clients over TCP (reliable commands) and UDP multicast (fast position broadcasts). The **Web Gateway** acts as a translator — it receives Socket.IO events from the browser frontend and forwards them as TCP messages to the game server, while also listening on the UDP multicast group to push real-time updates back to the browser.
 
 <br />
 
@@ -200,6 +202,14 @@ On-screen buttons are also available in the browser UI.
 | Web Gateway | Flask, Flask-SocketIO |
 | Frontend | HTML5 Canvas, Vanilla JS, Socket.IO |
 | Styling | Custom CSS with cyberpunk aesthetics |
+
+<br />
+
+## 🧠 Design Rationale
+
+- **TCP for game events** — Join, leave, move commands, clues, and game over notifications require guaranteed delivery and ordering, making TCP the natural choice.
+- **UDP multicast for position updates** — Player positions change rapidly and a dropped packet is acceptable; multicast allows a single send to reach all clients with minimal latency.
+- **WebSocket gateway for browser support** — Browsers cannot open raw TCP/UDP sockets, so a Flask-SocketIO gateway translates between the web and the game server's native protocol.
 
 <br />
 
