@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treasure Hunt</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</head>
+
+<body>
+
+  <div id="login-screen" class="glass-panel">
+    <h1>Multi-Threaded Treasure Hunt</h1>
+    <input type="text" id="username" placeholder="Enter Username">
+    <button id="join-btn">Join Game</button>
+  </div>
+
+  <div id="game-screen" class="hidden">
+    <div id="main-content">
+      <canvas id="game-canvas" width="600" height="600"></canvas>
+
+      <div id="controls">
+        <button data-dx="0" data-dy="1">W</button>
+        <div class="row">
+          <button data-dx="-1" data-dy="0">A</button>
+          <button data-dx="0" data-dy="-1">S</button>
+          <button data-dx="1" data-dy="0">D</button>
+        </div>
+      </div>
+
+      <div id="log-container"></div>
+    </div>
+
+    <div id="sidebar">
+      <div id="player-info" class="glass-panel info-card">
+        <h3>Player</h3>
+        <span id="player-name"></span>
+      </div>
+
+      <div id="treasure-info" class="glass-panel info-card">
+        <h3>Treasure</h3>
+        <span id="clue-display">Waiting...</span>
+      </div>
+
+      <div id="players-list-container" class="glass-panel info-card">
+        <h3>Players Nearby</h3>
+        <ul id="players-list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Over Modal -->
+  <div id="game-over-modal" class="hidden">
+    <div class="modal-content">
+      <h1 id="game-over-title">VICTORY!</h1>
+      <p id="game-over-message">You found the treasure!</p>
+      <button id="play-again-btn">Play Again</button>
+    </div>
+  </div>
+
+</body>
+
+</html>
